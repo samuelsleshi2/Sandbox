@@ -1,0 +1,34 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": ["${input:flag}", "${input:fontName}"]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "flag",
+            "type": "promptString",
+            "description": "Enter flag (e.g., -f or --font)",
+            "default": "-f"
+        },
+        {
+            "id": "fontName",
+            "type": "promptString",
+            "description": "Enter font name (e.g., slant or rectangles)",
+            "default": "slant"
+        }
+    ]
+}
