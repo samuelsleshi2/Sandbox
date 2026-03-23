@@ -44,15 +44,49 @@ $age = 17;
 //     echo 'Sorry, you are not old enough to vote';
 // }
 
-$t = date("H");
+$t = date("H"); // current hour
 
-if ($t < 12) {
-    echo "Good Morning, time is {$t}";
-}
-else if ($t < 17) {
-    echo "Good Afternoon, time is {$t}";
-}
-else {
-    echo "Good Evening, time is {$t}";
-}
+// if ($t < 12) {
+//     echo "Good Morning, time is {$t}";
+// } else if ($t < 17) {
+//     echo "Good Afternoon, time is {$t}";
+// } else {
+//     echo "Good Evening Chimdi, time is {$t}";
+// }
 
+// if (true) {
+//   echo('123');
+// }
+
+$posts = [];
+
+// if (!(empty($posts))) {
+//   echo $posts[0];
+// } else {
+//   echo('No posts');
+// }
+
+// echo !empty($posts) ? $posts[0] : 'No Posts';
+
+// $firstPost = !empty($posts) ? $posts[0] : 'No Posts';
+// $firstPost = !empty($posts) ? $posts[0] : null;
+
+// $firstPost = $posts[0] ?? null;
+
+// echo $firstPost;
+
+$favcolor = 'blue';
+
+switch($favcolor) {
+  case 'red':
+    echo 'your favorite color is red';
+    break;
+  case 'green':
+    echo 'your favorite color is green';
+    break;
+  case 'blue':
+    echo 'your favorite color is blue';
+    break;
+  default:
+    echo 'your favorite color is not red green or blue';
+}
