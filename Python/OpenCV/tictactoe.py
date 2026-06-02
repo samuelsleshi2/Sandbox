@@ -1,8 +1,7 @@
-import cv2
-import numpy as np
+import cv2 as cv
 
 # Read the image
-image = cv2.imread('ttt.png')
+image = cv.imread('ttt.png')
 
 # Check if the image was properly loaded
 if image is None:
@@ -11,7 +10,7 @@ if image is None:
 
 # If it was, greyscale it and display it
 print("Image read successfully.")
-gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-cv2.imshow("Tic Tac Toe board", gray_image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+cv.imshow("Tic Tac Toe board", gray_image)
+cv.waitKey(0)
+cv.destroyAllWindows()
