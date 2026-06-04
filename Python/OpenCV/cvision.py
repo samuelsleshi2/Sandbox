@@ -1,10 +1,10 @@
 # from ultralytics import YOLO
 import cv2 as cv
 import numpy as np
-import pyvirtualcam as cam
 import time
 import os
 from file_selector import get_image_path
+from virtualcam import broadcast
 
 def cell_dims(image):
     """Return width and height for each cell and ROI margins for a 3x3 grid over the image.
@@ -99,6 +99,21 @@ def game_result(board):
     # Otherwise the game is still in progress
     return None
 
+def are_moves_left(board, result):
+    """If there's no win/draw yet, uses result from game_result to return
+    a list of (row, col) for every empty cell."""
+    if result is not None:
+        # Winner or draw: the game is over, so there are no moves to make
+        return []
+
+    # No winner and board not full: collect the coordinates of the empty cells
+    empty_cells = []
+    for row in range(3):
+        for col in range(3):
+            if board[row, col] == " ":
+                empty_cells.append((row, col))
+    return empty_cells
+
 def show_result(original_image, result, empty_cells=()):
     """Pops up the original image with the game result drawn on it.
     If the game is unfinished, also labels each empty cell with its (row, col)."""
@@ -123,24 +138,7 @@ def show_result(original_image, result, empty_cells=()):
         cy = row * cell_h + cell_h // 2
         put_centered_text(display, f"({row},{col})", cx, cy, 0.8, (0, 200, 0), 2)
 
-    cv.imshow("Result", display)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
-
-def are_moves_left(board, result):
-    """If there's no win/draw yet, uses result from game_result to return
-    a list of (row, col) for every empty cell."""
-    if result is not None:
-        # Winner or draw: the game is over, so there are no moves to make
-        return []
-
-    # No winner and board not full: collect the coordinates of the empty cells
-    empty_cells = []
-    for row in range(3):
-        for col in range(3):
-            if board[row, col] == " ":
-                empty_cells.append((row, col))
-    return empty_cells
+    return display
 
 def show_debug_view(monochrome_image, board):
     """For debugging: show the grid + cell ROIs on a color copy with detected X/O/empty drawn in"""
@@ -161,9 +159,7 @@ def show_debug_view(monochrome_image, board):
             text = str(board[row, col])
             put_centered_text(debug_view, text, (x1 + x2) // 2, (y1 + y2) // 2, 1.0, (0, 0, 255), 2)
 
-    cv.imshow("Debug grid", debug_view)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+    return debug_view
 
 if __name__ == "__main__":
     # Retrieves the inputted image from other file's function
@@ -182,7 +178,11 @@ if __name__ == "__main__":
     # Decide the outcome, then announce it (and any open spots) on the original image
     result = game_result(current_board)
     empty_cells = are_moves_left(current_board, result)   # [] if the game is over
-    show_result(original_image, result, empty_cells)
+    
+    # Make the game result frame of the board, and the debug frame. Then combine them
+    result_frame = show_result(original_image, result, empty_cells)
+    debug_frame = show_debug_view(monochrome_image, current_board)
+    combined_frame = np.hstack((result_frame, debug_frame))
 
-    # Show the debug view (on the monochrome image) of what the computer detected
-    show_debug_view(monochrome_image, current_board)
+    # Broadcast the combined frame to OBS Studio
+    broadcast(combined_frame)
